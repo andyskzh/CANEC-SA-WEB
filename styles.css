@@ -41,7 +41,7 @@ img {
     padding-bottom: 140px;
 }
 
-.theme-shadow{
+.theme-shadow {
     box-shadow: var(--box-shadow);
 }
 
@@ -112,7 +112,7 @@ img {
 }
 
 /* ICONBOX */
-.iconbox{
+.iconbox {
     width: 70px;
     height: 70px;
     display: inline-flex;
@@ -133,7 +133,7 @@ img {
     z-index: 2;
 }
 
-.service::after{
+.service::after {
     content: "";
     width: 40px;
     height: 40px;
@@ -144,7 +144,7 @@ img {
     transition: var(--transition);
 }
 
-.service:hover::after{
+.service:hover::after {
     width: 100%;
     height: 100%;
     background: var(--c-brand);
@@ -156,7 +156,7 @@ img {
     color: white;
 }
 
-.service:hover .iconbox{
+.service:hover .iconbox {
     background-color: rgba(255, 255, 255, 0.2);
     color: white;
 }
@@ -166,10 +166,9 @@ img {
     background: linear-gradient(rgba(var(--c-brand-rgb), 0.8), rgba(var(--c-brand-rgb), 0.8)), url(img/imag-CANEC-4-1024x576-1.png);
     background-position: center;
     background-size: cover;
-
 }
 
-/* REVIEW */ 
+/* REVIEW */
 .review small {
     font-weight: 600;
     text-transform: uppercase;
@@ -180,7 +179,7 @@ img {
     position: relative;
 }
 
-.review-head::after{
+.review-head::after {
     content: "";
     width: 28px;
     height: 28px;
@@ -215,7 +214,7 @@ img {
     transform: scale(1.1);
 }
 
-/* FOOTER */ 
+/* FOOTER */
 footer {
     padding-top: 120px;
 }
@@ -374,4 +373,41 @@ footer .line {
     min-height: calc(100% - 1rem);
 }
 
-
+/* REGISTER PAGE */
+.register-container {
+    margin-top: 5%;
+}
+.register-form {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.15);
+    color: var(--c-dark);
+    margin-bottom: 40px;
+}
+.register-form h3 {
+    color: var(--c-dark);
+}
+.form-control:focus {
+    border-color: var(--c-brand);
+    box-shadow: 0 0 0 0.2rem rgba(var(--c-brand-rgb), 0.25);
+}
+.btn-primary {
+    background-color: var(--c-brand);
+    border: none;
+}
+.btn-primary:hover {
+    background-color: var(--c-brand-light);
+}
+.eye-icon {
+    cursor: pointer;
+    color: var(--c-brand);
+}
+.custom-control-label {
+    color: var(--c-dark);
+}
+.error-message {
+    color: red;
+    font-size: 0.9em;
+    display: none;
+}
