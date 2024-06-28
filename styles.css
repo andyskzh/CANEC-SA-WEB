@@ -7,12 +7,13 @@
     --font-base: sans-serif;
     --box-shadow: 0px 15px 25px rgba(0,0,0,0.08);
     --transition: all 0.5s ease;
-} 
+}
 
 body {
     font-family: var(--font-base);
     line-height: 1.7;
     color: var(--c-body);
+    background-color: #ffffff;
 }
 
 h1, h2, h3, h4, h5, h6,
@@ -313,3 +314,64 @@ footer .line {
     box-shadow: none;
     border-color: var(--c-brand);
 }
+
+/* LOGIN PAGE */
+.login-container {
+    margin-top: 3%;
+}
+
+.login-form {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.15);
+    color: var(--c-dark);
+    margin-bottom: 40px;
+}
+
+.login-form h3 {
+    color: var(--c-dark);
+}
+
+.form-control:focus {
+    border-color: var(--c-brand);
+    box-shadow: 0 0 0 0.2rem rgba(var(--c-brand-rgb), 0.25);
+}
+
+.btn-primary {
+    background-color: var(--c-brand);
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: var(--c-brand-light);
+}
+
+.eye-icon {
+    cursor: pointer;
+    color: var(--c-brand);
+}
+
+.custom-control-label {
+    color: var(--c-dark);
+}
+
+.modal-content {
+    color: #333333; /* Asegura que las letras sean visibles */
+}
+
+.modal-header {
+    border-bottom: none;
+}
+
+.modal-footer {
+    border-top: none;
+}
+
+.modal-dialog-centered {
+    display: flex;
+    align-items: center;
+    min-height: calc(100% - 1rem);
+}
+
+
