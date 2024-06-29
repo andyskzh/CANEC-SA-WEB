@@ -207,3 +207,15 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 });
 
+
+document.getElementById("toggleConfirmPassword").addEventListener("click", function() {
+  var confirmPasswordField = document.getElementById("confirm-password");
+  var confirmPasswordFieldType = confirmPasswordField.getAttribute("type");
+  if (confirmPasswordFieldType === "password") {
+    confirmPasswordField.setAttribute("type", "text");
+    this.innerHTML = '<i class="fas fa-eye-slash"></i>';
+  } else {
+    confirmPasswordField.setAttribute("type", "password");
+    this.innerHTML = '<i class="fas fa-eye"></i>';
+  }
+});
