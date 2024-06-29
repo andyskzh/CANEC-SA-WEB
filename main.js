@@ -103,3 +103,107 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   });
 });
+
+document.addEventListener("DOMContentLoaded", function() {
+  // Validación adicional para el formulario de registro
+  document.getElementById("register-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+    var name = document.getElementById("name").value.trim();
+    var email = document.getElementById("email").value.trim();
+    var password = document.getElementById("password").value.trim();
+    var confirmPassword = document.getElementById("confirm-password").value.trim();
+    
+    if (!validateName(name)) {
+      showError("name", "Por favor, ingrese su nombre.");
+      return;
+    }
+    
+    if (!validateEmail(email)) {
+      showError("email", "Por favor, ingrese un correo válido.");
+      return;
+    }
+    
+    if (!validatePassword(password)) {
+      showError("password", "La contraseña debe tener al menos 8 caracteres, incluyendo letras y números.");
+      return;
+    }
+    
+    if (password !== confirmPassword) {
+      showError("confirm-password", "Las contraseñas no coinciden.");
+      return;
+    }
+    
+    // Si la validación es exitosa, enviar los datos al backend
+    registerUser(name, email, password);
+  });
+
+  // Mostrar errores
+  function showError(field, message) {
+    var errorElement = document.getElementById("error-" + field);
+    if (!errorElement) {
+      errorElement = document.createElement("div");
+      errorElement.id = "error-" + field;
+      errorElement.className = "text-danger";
+      document.getElementById(field).parentElement.appendChild(errorElement);
+    }
+    errorElement.innerText = message;
+  }
+
+  // Validación de nombre
+  function validateName(name) {
+    return name.length > 0;
+  }
+
+  // Validación de email
+  function validateEmail(email) {
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  // Validación de contraseña
+  function validatePassword(password) {
+    var passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&_-]{8,}$/;
+    return passwordRegex.test(password);
+  }
+
+  // Simulación de registro del usuario
+  function registerUser(name, email, password) {
+    fetch('/api/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ name: name, email: email, password: password })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Registro exitoso, redirigir al usuario
+        window.location.href = "index.html";
+      } else {
+        // Mostrar mensaje de error
+        alert("Error de registro: " + data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  }
+
+  // Mostrar/Ocultar contraseña adicional
+  document.getElementById("togglePassword").addEventListener("click", function() {
+    var passwordField = document.getElementById("password");
+    var confirmPasswordField = document.getElementById("confirm-password");
+    var passwordFieldType = passwordField.getAttribute("type");
+    if (passwordFieldType === "password") {
+      passwordField.setAttribute("type", "text");
+      confirmPasswordField.setAttribute("type", "text");
+      this.innerHTML = '<i class="fas fa-eye-slash"></i>';
+    } else {
+      passwordField.setAttribute("type", "password");
+      confirmPasswordField.setAttribute("type", "password");
+      this.innerHTML = '<i class="fas fa-eye"></i>';
+    }
+  });
+});
+
