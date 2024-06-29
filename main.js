@@ -9,169 +9,97 @@ AOS.init({
   anchorPlacement: 'top-bottom', // defines which position of the element regarding to window should trigger the animation
 });
 
-$(document).ready(function () {
-  // Cargar credenciales guardadas si existen
-  if (localStorage.getItem("rememberMe") === "true") {
-    $("#email").val(localStorage.getItem("rememberedEmail"));
-    $("#password").val(localStorage.getItem("rememberedPassword"));
-    $("#rememberMe").prop("checked", true);
-  }
-});
+document.addEventListener("DOMContentLoaded", function() {
+  // Funcionalidad adicional para el frontend
 
-  $(document).ready(function () {
-    // Toggle Password Visibility
-    $("#togglePassword").click(function () {
-      var passwordField = $("#password");
-      var passwordFieldType = passwordField.attr("type");
-      if (passwordFieldType == "password") {
-        passwordField.attr("type", "text");
-        $(this).html('<i class="fas fa-eye-slash"></i>');
-      } else {
-        passwordField.attr("type", "password");
-        $(this).html('<i class="fas fa-eye"></i>');
-      }
-    });
-  
-    // Real-time Validation
-    $("#nombre").on("input", function () {
-      var nameRegex = /^[a-zA-Z\s]+$/;
-      if (!nameRegex.test($(this).val().trim())) {
-        $("#error-nombre").show().text("El nombre solo debe contener letras y espacios.");
-      } else {
-        $("#error-nombre").hide();
-      }
-    });
-  
-    $("#email").on("input", function () {
-      var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test($(this).val().trim())) {
-        $("#error-email").show().text("Por favor, ingrese un correo válido.");
-      } else {
-        $("#error-email").hide();
-      }
-    });
-  
-    $("#password").on("input", function () {
-      var passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&_-]{8,}$/;
-      if (!passwordRegex.test($(this).val().trim())) {
-        $("#error-password").show().text("La contraseña debe tener al menos 8 caracteres, incluyendo letras, números y caracteres especiales.");
-      } else {
-        $("#error-password").hide();
-      }
-    });
-  
-    // Form Submission
-    $("#register-form").submit(function (event) {
-      event.preventDefault();
-      var nombre = $("#nombre").val().trim();
-      var email = $("#email").val().trim();
-      var password = $("#password").val().trim();
-      var isValid = true;
-  
-      var nameRegex = /^[a-zA-Z\s]+$/;
-      if (!nameRegex.test(nombre)) {
-        $("#error-nombre").show().text("El nombre solo debe contener letras y espacios.");
-        isValid = false;
-      } else {
-        $("#error-nombre").hide();
-      }
-  
-      var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        $("#error-email").show().text("Por favor, ingrese un correo válido.");
-        isValid = false;
-      } else {
-        $("#error-email").hide();
-      }
-  
-      var passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&_-]{8,}$/;
-      if (!passwordRegex.test(password)) {
-        $("#error-password").show().text("La contraseña debe tener al menos 8 caracteres, incluyendo letras, números y caracteres especiales.");
-        isValid = false;
-      } else {
-        $("#error-password").hide();
-      }
-  
-      if (isValid) {
-        var avatarUrl = "img/messi.jpg";
-        localStorage.setItem(email, JSON.stringify({
-          name: nombre,
-          email: email,
-          password: password,
-          avatar: avatarUrl,
-        }));
-  
-        sessionStorage.setItem("isAuthenticated", "true");
-        sessionStorage.setItem("userName", nombre);
-        sessionStorage.setItem("userEmail", email);
-        sessionStorage.setItem("userAvatar", avatarUrl);
-  
-        alert("Registro exitoso.");
-        window.location.href = "index.html";
-      }
-    });
-
-  // Simulando la autenticación y validando la información del usuario
-  $("#login-form").submit(function (event) {
+  // Validación adicional para el formulario de login
+  document.getElementById("login-form").addEventListener("submit", function(event) {
     event.preventDefault();
-    var email = $("#email").val().trim();
-    var password = $("#password").val().trim();
-    var rememberMe = $("#rememberMe").prop("checked");
-    var userData = JSON.parse(localStorage.getItem(email));
+    var email = document.getElementById("email").value.trim();
+    var password = document.getElementById("password").value.trim();
+    
+    if (!validateEmail(email)) {
+      showError("email", "Por favor, ingrese un correo válido.");
+      return;
+    }
+    
+    if (!validatePassword(password)) {
+      showError("password", "La contraseña debe tener al menos 8 caracteres, incluyendo letras, números y caracteres especiales.");
+      return;
+    }
+    
+    // Si la validación es exitosa, enviar los datos al backend
+    authenticateUser(email, password);
+  });
 
-    if (userData) {
-      if (userData.password === password) {
-        var name = userData.name;
-        var avatarUrl = userData.avatar;
+  // Mostrar errores
+  function showError(field, message) {
+    var errorElement = document.getElementById("error-" + field);
+    if (!errorElement) {
+      errorElement = document.createElement("div");
+      errorElement.id = "error-" + field;
+      errorElement.className = "text-danger";
+      document.getElementById(field).parentElement.appendChild(errorElement);
+    }
+    errorElement.innerText = message;
+  }
 
-        // Guardar en sessionStorage
-        sessionStorage.setItem("isAuthenticated", "true");
-        sessionStorage.setItem("userName", name);
-        sessionStorage.setItem("userEmail", email);
-        sessionStorage.setItem("userAvatar", avatarUrl);
+  // Validación de email
+  function validateEmail(email) {
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
 
-        // Guardar credenciales si se selecciona "Recordar Contraseña"
-        if (rememberMe) {
-          localStorage.setItem("rememberMe", "true");
-          localStorage.setItem("rememberedEmail", email);
-          localStorage.setItem("rememberedPassword", password);
-        } else {
-          localStorage.removeItem("rememberMe");
-          localStorage.removeItem("rememberedEmail");
-          localStorage.removeItem("rememberedPassword");
-        }
+  // Validación de contraseña
+  function validatePassword(password) {
+    var passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&_-]{8,}$/;
+    return passwordRegex.test(password);
+  }
 
-        // Redirigir a la página de inicio
+  // Simulación de autenticación del usuario
+  function authenticateUser(email, password) {
+    fetch('/api/authenticate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email: email, password: password })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Autenticación exitosa, redirigir al usuario
         window.location.href = "index.html";
       } else {
-        alert("Contraseña incorrecta. Inténtalo de nuevo.");
+        // Mostrar mensaje de error
+        alert("Error de autenticación: " + data.message);
       }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  }
+
+  // Mostrar/Ocultar contraseña adicional
+  document.getElementById("togglePassword").addEventListener("click", function() {
+    var passwordField = document.getElementById("password");
+    var passwordFieldType = passwordField.getAttribute("type");
+    if (passwordFieldType === "password") {
+      passwordField.setAttribute("type", "text");
+      this.innerHTML = '<i class="fas fa-eye-slash"></i>';
     } else {
-      alert("Correo electrónico no registrado.");
+      passwordField.setAttribute("type", "password");
+      this.innerHTML = '<i class="fas fa-eye"></i>';
     }
   });
 
-  // Manejar el restablecimiento de contraseña
-  $("#reset-password-form").submit(function (event) {
-    event.preventDefault();
-    var email = $("#reset-email").val().trim();
-    var newPassword = $("#new-password").val().trim();
-    var confirmNewPassword = $("#confirm-new-password").val().trim();
-    var userData = JSON.parse(localStorage.getItem(email));
-
-    if (!userData) {
-      alert("Correo electrónico no registrado.");
-      return;
+  // Funcionalidad para recordar contraseña
+  document.getElementById("rememberMe").addEventListener("change", function() {
+    var rememberMe = this.checked;
+    if (rememberMe) {
+      localStorage.setItem("rememberMe", "true");
+    } else {
+      localStorage.removeItem("rememberMe");
     }
-
-    if (newPassword !== confirmNewPassword) {
-      alert("Las contraseñas no coinciden.");
-      return;
-    }
-
-    userData.password = newPassword;
-    localStorage.setItem(email, JSON.stringify(userData));
-    alert("Contraseña restablecida exitosamente.");
-    $("#resetPasswordModal").modal("hide");
   });
 });
