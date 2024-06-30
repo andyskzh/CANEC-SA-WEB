@@ -56,9 +56,9 @@ document.addEventListener("DOMContentLoaded", function() {
     return passwordRegex.test(password);
   }
 
-  // Simulación de autenticación del usuario
+  // Autenticación del usuario
   function authenticateUser(email, password) {
-    fetch('/api/authenticate', {
+    fetch('http://localhost:5000/api/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -67,7 +67,9 @@ document.addEventListener("DOMContentLoaded", function() {
     })
     .then(response => response.json())
     .then(data => {
-      if (data.success) {
+      if (data.token) {
+        // Almacenar el token en el almacenamiento local
+        localStorage.setItem('token', data.token);
         // Autenticación exitosa, redirigir al usuario
         window.location.href = "index.html";
       } else {
@@ -166,9 +168,9 @@ document.addEventListener("DOMContentLoaded", function() {
     return passwordRegex.test(password);
   }
 
-  // Simulación de registro del usuario
+  // Registro del usuario
   function registerUser(name, email, password) {
-    fetch('/api/register', {
+    fetch('http://localhost:5000/api/auth/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -177,7 +179,9 @@ document.addEventListener("DOMContentLoaded", function() {
     })
     .then(response => response.json())
     .then(data => {
-      if (data.success) {
+      if (data.token) {
+        // Almacenar el token en el almacenamiento local
+        localStorage.setItem('token', data.token);
         // Registro exitoso, redirigir al usuario
         window.location.href = "index.html";
       } else {
